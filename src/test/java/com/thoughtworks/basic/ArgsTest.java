@@ -2,24 +2,31 @@ package com.thoughtworks.basic;
 
 import ConsoleCommandAnalysis.Args;
 import ConsoleCommandAnalysis.Arg;
+import ConsoleCommandAnalysis.FlagSchema;
+import ConsoleCommandAnalysis.Schema;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ArgsTest {
     @Test
-    public void should_return_string_list_when_scan_given_string(){
+    public void should_return_size_3_when_scan_given_string_and_schema() throws Exception {
         //given
         String argsText = "-l true -p 8080 -d usr/logs";
-        Args args = new Args(argsText);
+        Set<FlagSchema> flagSchemas = new HashSet<>();
+        flagSchemas.add(new FlagSchema("l", Boolean.TYPE));
+        flagSchemas.add(new FlagSchema("d", String.class));
+        flagSchemas.add(new FlagSchema("p", Integer.class));
+        Schema schema = new Schema(flagSchemas);
 
         //when
-        List<Arg> Args = args.scan();
+        Args args = new Args(argsText, schema);
 
         //then
-        Assert.assertEquals(3, Args.size());
-        System.out.println(Args);
-//        Assert.assertEquals("Arg{key='l', value='true'}", new Arg("l","true").toString());
+        Assert.assertEquals(3, args.getArgSet().size());
     }
+
 }

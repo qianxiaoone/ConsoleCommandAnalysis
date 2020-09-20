@@ -8,7 +8,7 @@ public class Args {
     private Schema schema;
     private Set<Arg> argSet = new HashSet<>();
 
-    public Args(String argsText , Schema schema) {
+    public Args(String argsText, Schema schema) {
         this.argsText = argsText;
         this.schema = schema;
         this.scan();
@@ -50,7 +50,7 @@ public class Args {
             String[] splitKeyValue = keyValue.split(" ");
             String key = splitKeyValue[0];
             String value = splitKeyValue[1];
-            if (!schema.getFlagsSchema().contains(key)){
+            if (!containsFlagOfSchema(key)) {
                 try {
                     throw new Exception(key + " is not defined!");
                 } catch (Exception e) {
@@ -61,4 +61,14 @@ public class Args {
         });
         argSet = new HashSet<>(args);
     }
+
+    public boolean containsFlagOfSchema(String flag) {
+        for (FlagSchema flagSchema : schema.getFlagsSchema()) {
+            if (flagSchema.containsFlag(flag)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
