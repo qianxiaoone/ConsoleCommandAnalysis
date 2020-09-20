@@ -46,4 +46,55 @@ public class ArgsTest {
         //then
         Assert.assertEquals("true", l);
     }
+
+    @Test
+    public void should_return_8080_when_new_Args_given_string_and_schema() throws Exception {
+        //given
+        String argsText = "-l true -p 8080 -d usr/logs";
+        Set<FlagSchema> flagSchemas = new HashSet<>();
+        flagSchemas.add(new FlagSchema("l", Boolean.TYPE));
+        flagSchemas.add(new FlagSchema("d", String.class));
+        flagSchemas.add(new FlagSchema("p", Integer.class));
+        Schema schema = new Schema(flagSchemas);
+        Args args = new Args(argsText, schema);
+
+        //when
+        String p = args.getValueOf("p");
+
+        //then
+        Assert.assertEquals("8080", p);
+    }
+
+    @Test
+    public void should_return_usr_logs_when_new_Args_given_string_and_schema() throws Exception {
+        //given
+        String argsText = "-l true -p 8080 -d usr/logs";
+        Set<FlagSchema> flagSchemas = new HashSet<>();
+        flagSchemas.add(new FlagSchema("l", Boolean.TYPE));
+        flagSchemas.add(new FlagSchema("d", String.class));
+        flagSchemas.add(new FlagSchema("p", Integer.class));
+        Schema schema = new Schema(flagSchemas);
+        Args args = new Args(argsText, schema);
+
+        //when
+        String d = args.getValueOf("d");
+
+        //then
+        Assert.assertEquals("usr/logs", d);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_return_IllegalArgumentException_when_new_Args_given_string_and_schema() throws Exception {
+        //given
+        String argsText = "-l true -p 8080 -d usr/logs";
+        Set<FlagSchema> flagSchemas = new HashSet<>();
+        flagSchemas.add(new FlagSchema("l", Boolean.TYPE));
+        flagSchemas.add(new FlagSchema("d", String.class));
+        flagSchemas.add(new FlagSchema("p", Integer.class));
+        Schema schema = new Schema(flagSchemas);
+        Args args = new Args(argsText, schema);
+
+        //when
+        String a = args.getValueOf("a");
+    }
 }

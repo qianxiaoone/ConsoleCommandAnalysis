@@ -27,7 +27,7 @@ public class Args {
         if (getDefaultValue(flag) != null) {
             return getDefaultValue(flag);
         }
-        throw new Exception(flag + " is not find!");
+        throw new IllegalArgumentException(flag + " is not find!");
     }
 
     private String getDefaultValue(String flag) {
@@ -52,7 +52,7 @@ public class Args {
             String value = splitKeyValue[1];
             if (!containsFlagOfSchema(key)) {
                 try {
-                    throw new Exception(key + " is not defined!");
+                    throw new IllegalArgumentException(key + " is not defined!");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
