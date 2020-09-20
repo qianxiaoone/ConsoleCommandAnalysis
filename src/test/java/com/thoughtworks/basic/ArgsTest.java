@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class ArgsTest {
     @Test
-    public void should_return_size_3_when_scan_given_string_and_schema() throws Exception {
+    public void should_return_size_3_when_new_Args_given_string_and_schema() throws Exception {
         //given
         String argsText = "-l true -p 8080 -d usr/logs";
         Set<FlagSchema> flagSchemas = new HashSet<>();
@@ -29,4 +29,21 @@ public class ArgsTest {
         Assert.assertEquals(3, args.getArgSet().size());
     }
 
+    @Test
+    public void should_return_true_when_new_Args_given_string_and_schema() throws Exception {
+        //given
+        String argsText = "-l true -p 8080 -d usr/logs";
+        Set<FlagSchema> flagSchemas = new HashSet<>();
+        flagSchemas.add(new FlagSchema("l", Boolean.TYPE));
+        flagSchemas.add(new FlagSchema("d", String.class));
+        flagSchemas.add(new FlagSchema("p", Integer.class));
+        Schema schema = new Schema(flagSchemas);
+        Args args = new Args(argsText, schema);
+
+        //when
+        String l = args.getValueOf("l");
+
+        //then
+        Assert.assertEquals("true", l);
+    }
 }
