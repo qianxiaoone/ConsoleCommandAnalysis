@@ -1,36 +1,64 @@
 package ConsoleCommandAnalysis;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Args {
     private String argsText;
+    private Schema schema;
+    private Set<Arg> argSet = new HashSet<>();
 
-    public Args(String argsText) {
+    public Args(String argsText , Schema schema) {
         this.argsText = argsText;
+        this.schema = schema;
+        this.scan();
     }
 
-    public List<KeyValuePair> scan() {
+    public Set<Arg> getArgSet() {
+        return argSet;
+    }
+
+    public String getValueOf(String flag) throws Exception {
+        for (Arg arg : argSet) {
+            if (arg.getKey().equalsIgnoreCase(flag)) {
+                return arg.getValue();
+            }
+        }
+        if (getDefaultValue(flag) != null) {
+            return getDefaultValue(flag);
+        }
+        throw new Exception(flag + " is not find!");
+    }
+
+    private String getDefaultValue(String flag) {
+        for (FLAGENUM flagenum : FLAGENUM.values()) {
+            if (flag.equalsIgnoreCase(flagenum.getFlag())) {
+                return flagenum.getDefaultValue();
+            }
+        }
+        return null;
+    }
+
+    public void scan() {
         List<String> keyValues = Arrays.asList(argsText.split("-"));
         keyValues = keyValues.stream()
-//                    .map(keyValue -> keyValue.trim())
                 .map(String::trim)
                 .collect(Collectors.toList());
-        /*
-        * List<String> keyValues = Arrays.asList(" ".concat(argsText).split("-"));
-        * */
-
-        keyValues = keyValues.subList(1,keyValues.size());
-
-        List<KeyValuePair> keyValuePairs = new ArrayList<>();
+        keyValues = keyValues.subList(1, keyValues.size());
+        List<Arg> args = new ArrayList<>();
         keyValues.forEach(keyValue -> {
             String[] splitKeyValue = keyValue.split(" ");
             String key = splitKeyValue[0];
             String value = splitKeyValue[1];
-            keyValuePairs.add(new KeyValuePair(key,value));
+            if (!schema.getFlagsSchema().contains(key)){
+                try {
+                    throw new Exception(key + " is not defined!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            args.add(new Arg(key, value));
         });
-        return keyValuePairs;
+        argSet = new HashSet<>(args);
     }
 }

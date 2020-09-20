@@ -1,7 +1,7 @@
 package com.thoughtworks.basic;
 
 import ConsoleCommandAnalysis.Args;
-import ConsoleCommandAnalysis.KeyValuePair;
+import ConsoleCommandAnalysis.Arg;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,13 +15,11 @@ public class ArgsTest {
         Args args = new Args(argsText);
 
         //when
-        List<KeyValuePair> KeyValuePairs = args.scan();
+        List<Arg> Args = args.scan();
 
         //then
-        Assert.assertEquals(3, KeyValuePairs.size());
-//        Assert.assertEquals(true, keyValueString.contains("l true"));
-//        Assert.assertEquals(true, keyValueString.contains("p 8080"));
-//        Assert.assertEquals(true, keyValueString.contains("d usr/logs"));
-//        Assert.assertEquals(true, new KeyValuePair("l","true"));
+        Assert.assertEquals(3, Args.size());
+        System.out.println(Args);
+//        Assert.assertEquals("Arg{key='l', value='true'}", new Arg("l","true").toString());
     }
 }

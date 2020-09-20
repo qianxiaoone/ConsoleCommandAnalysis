@@ -15,4 +15,7 @@ public class Schema {
                 .getType();
     }
 
+    public Set<FlagSchema> getFlagsSchema() {
+        return flagsSchema;
+    }
 }
