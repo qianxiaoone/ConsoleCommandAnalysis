@@ -1,12 +1,15 @@
 package ConsoleCommandAnalysis;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Args {
     private String argsText;
     private Schema schema;
     private Set<Arg> argSet = new HashSet<>();
+    private final String space = " ";
 
     public Args(String argsText, Schema schema) {
         this.argsText = argsText;
@@ -40,23 +43,22 @@ public class Args {
     }
 
     public void scan() {
+        argsText = inputHandle();
         List<String> keyValues = Arrays.asList(argsText.split("-"));
         keyValues = keyValues.stream()
-                .map(String::trim)
                 .collect(Collectors.toList());
         keyValues = keyValues.subList(1, keyValues.size());
         List<Arg> args = new ArrayList<>();
         keyValues.forEach(keyValue -> {
             String[] splitKeyValue = keyValue.split(" ");
-            String key = splitKeyValue[0];
-            String value = splitKeyValue[1];
-            if (!containsFlagOfSchema(key)) {
-                try {
-                    throw new IllegalArgumentException(key + " is not defined!");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            String key = splitKeyValue[0].trim();
+            String value = "";
+            if (splitKeyValue.length < 2){
+                value = getDefaultValue(key);
+            }else {
+                value = splitKeyValue[1].trim();
             }
+            paramCheck(key, value);
             args.add(new Arg(key, value));
         });
         argSet = new HashSet<>(args);
@@ -64,11 +66,32 @@ public class Args {
 
     public boolean containsFlagOfSchema(String flag) {
         for (FlagSchema flagSchema : schema.getFlagsSchema()) {
-            if (flagSchema.containsFlag(flag)){
+            if (flagSchema.containsFlag(flag)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public String inputHandle() {
+        return argsText.replaceAll(" +", " ").trim();
+    }
+
+    public void paramCheck(String key, String value) {
+        if (!containsFlagOfSchema(key)) {
+            try {
+                throw new IllegalArgumentException(key + " is not defined!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (key.startsWith(space) || value.trim().contains(space)) {
+            try {
+                throw new IllegalArgumentException("Param is illegal!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
