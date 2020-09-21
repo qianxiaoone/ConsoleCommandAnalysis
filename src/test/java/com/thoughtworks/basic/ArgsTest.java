@@ -161,4 +161,27 @@ public class ArgsTest {
         //then
         Assert.assertEquals("false", l);
     }
+
+    //(expected = IllegalArgumentException.class)
+    @Test
+    public void should_return_spaceException_when_new_Args_given_string_and_schema(){
+        //given
+        String argsText = "-l true -p-d usr/logs";
+        Set<FlagSchema> flagSchemas = new HashSet<>();
+        flagSchemas.add(new FlagSchema("l", Boolean.TYPE));
+        flagSchemas.add(new FlagSchema("d", String.class));
+        flagSchemas.add(new FlagSchema("p", Integer.class));
+        Schema schema = new Schema(flagSchemas);
+
+        //when
+        String errorStr = "";
+        try {
+            new Args(argsText, schema);
+        } catch (Exception e) {
+            errorStr = e.getMessage();
+        }
+
+        //then
+        Assert.assertEquals("Param should have space!", errorStr);
+    }
 }

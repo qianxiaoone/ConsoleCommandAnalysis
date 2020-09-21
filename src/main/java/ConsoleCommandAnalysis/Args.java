@@ -44,6 +44,7 @@ public class Args {
 
     public void scan() {
         argsText = inputHandle();
+        spaceCheck();
         List<String> keyValues = Arrays.asList(argsText.split("-"));
         keyValues = keyValues.stream()
                 .collect(Collectors.toList());
@@ -77,20 +78,21 @@ public class Args {
         return argsText.replaceAll(" +", " ").trim();
     }
 
+    public void spaceCheck() {
+        String regEx = "^.*-[A-Za-z]-.*$";
+        Pattern pattern = Pattern.compile(regEx);
+        Matcher matcher = pattern.matcher(argsText);
+        if (matcher.matches()) {
+            throw new IllegalArgumentException("Param should have space!");
+        }
+    }
+
     public void paramCheck(String key, String value) {
         if (!containsFlagOfSchema(key)) {
-            try {
-                throw new IllegalArgumentException(key + " is not defined!");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            throw new IllegalArgumentException(key + " is not defined!");
         }
         if (key.startsWith(space) || value.trim().contains(space)) {
-            try {
-                throw new IllegalArgumentException("Param is illegal!");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            throw new IllegalArgumentException("Param is illegal!");
         }
     }
 
