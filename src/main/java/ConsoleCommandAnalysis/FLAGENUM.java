@@ -6,7 +6,7 @@ package ConsoleCommandAnalysis;
 
 public enum FLAGENUM {
     //
-    BOOLEAN("l","true"),STRING("d",""),NUMBER("p","0");
+    BOOLEAN("l","false"),STRING("d",""),NUMBER("p","0");
     private String flag;
     private String defaultValue;
 

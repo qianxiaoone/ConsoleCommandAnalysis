@@ -143,4 +143,22 @@ public class ArgsTest {
         Assert.assertEquals("0", p);
         Assert.assertEquals("", d);
     }
+
+    @Test
+    public void should_return_false_when_new_Args_given_string_and_schema() throws Exception {
+        //given
+        String argsText = "-p 8080";
+        Set<FlagSchema> flagSchemas = new HashSet<>();
+        flagSchemas.add(new FlagSchema("l", Boolean.TYPE));
+        flagSchemas.add(new FlagSchema("d", String.class));
+        flagSchemas.add(new FlagSchema("p", Integer.class));
+        Schema schema = new Schema(flagSchemas);
+        Args args = new Args(argsText, schema);
+
+        //when
+        String l = args.getValueOf("l");
+
+        //then
+        Assert.assertEquals("false", l);
+    }
 }
